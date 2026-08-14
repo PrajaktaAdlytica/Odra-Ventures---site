@@ -83,6 +83,15 @@ function ButtonLink({ href, children, secondary = false, className = "" }) {
   );
 }
 
+function TechnologyPartnerCell({ partner }) {
+  return (
+    <div className={partner.logo ? "" : "text-only"}>
+      {partner.logo && <img src={partner.logo} alt={partner.name} loading="lazy" decoding="async" />}
+      <span>{partner.name}</span>
+    </div>
+  );
+}
+
 function PortfolioCard({ company, index, wide = false }) {
   const handlePointerMove = (event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -182,7 +191,7 @@ function Footer() {
         </div>
         <div><h3>Company</h3><a href="/team">Team</a><a href="/thesis">Thesis</a><a href="/partners">Partners</a><a href="/process">Process</a><a href="/apply">Apply</a><a href="/contact">Contact</a></div>
         <div><h3>Resources</h3><a href="/newsroom">Newsroom</a><a href="/events">Events</a><a href="/faq">FAQ</a><a href="/resources">Resources</a><a href="/press">Press Kit</a></div>
-        <div><h3>Legal</h3><a href="/legal">Privacy Policy</a><a href="/legal">Terms of Service</a><a href="/legal">Disclaimer</a></div>
+        <div><h3>Legal</h3><a href="/legal#privacy">Privacy Policy</a><a href="/legal#terms">Terms of Service</a><a href="/legal#disclaimer">Disclaimer</a></div>
       </div>
       <div className="footer-bottom">
         <span>© 2026 Odra Venture Sp. z o.o. All rights reserved.</span>
@@ -240,6 +249,8 @@ function SectorFocusVisual({ sector, index }) {
 function HomePage() {
   const [activeSector, setActiveSector] = useState(0);
   const motionScope = useRef(null);
+  const homepagePortfolio = portfolio.filter((company) => ["TopSpots", "CogStorm", "GridVoltX", "CarbVault"].includes(company.name));
+  const homepageConsortium = consortiumPartners.filter((partner) => ["VO2 Ventures", "Space Bridge Fund", "DGA S.A.", "Adlytica"].includes(partner.name));
   const selectSector = (index) => setActiveSector(index);
   useHomeMotion(motionScope);
 
@@ -284,25 +295,6 @@ function HomePage() {
           </div>
         </section>
 
-        <section className="home-editorial section-pad">
-          <div className="home-editorial-intro">
-            <p className="eyebrow">Newsroom</p>
-            <h2>Insights and perspectives for founders.</h2>
-            <ArrowLink href="/newsroom">Visit the newsroom</ArrowLink>
-          </div>
-          <div className="home-editorial-grid">
-            {news.slice(1, 4).map((item, i) => (
-              <a href={item.href} className="home-editorial-card" key={item.company}>
-                <img src={editorialImages[i]} alt="" aria-hidden="true" loading="lazy" decoding="async" />
-                <span>{item.category}</span>
-                <h3>{item.company}</h3>
-                <p>{item.body}</p>
-                <Icon name="arrow-right" />
-              </a>
-            ))}
-          </div>
-        </section>
-
         <section className="alliances-section section-pad dark-section">
           <SectionHeading eyebrow="03 / Strategic alliances" title="Official partner of the world's leading technology programs" intro="Our founders inherit our partner status from day one — direct access to credits, technical support, and go-to-market resources from NVIDIA, AWS, Google, IBM, Oracle, Anthropic, Ramp, and Lovable." />
           <div className="alliances-grid">
@@ -320,8 +312,19 @@ function HomePage() {
 
         <section className="partner-rail section-pad-sm">
           <p className="eyebrow">Technology partners & grant providers</p>
-          <div className="logo-grid">{technologyPartners.slice(0, 12).map((partner) => <div key={partner.name}><img src={partner.logo} alt={partner.name} loading="lazy" decoding="async" /><span>{partner.name}</span></div>)}</div>
+          <div className="logo-grid">{technologyPartners.map((partner) => <TechnologyPartnerCell partner={partner} key={partner.name} />)}</div>
           <ArrowLink href="/partners">See more of our activated partnerships</ArrowLink>
+        </section>
+
+        <section className="home-consortium section-pad">
+          <SectionHeading eyebrow="Consortium partners" title="Backed by leading Consortium Partners" intro="Venture funds, accelerators, and venture builders co-investing in and scaling European startups." action={{ href: "/partners", label: "Explore our partner ecosystem" }} />
+          <div className="home-consortium-grid">
+            {homepageConsortium.map((partner) => (
+              <a href={partner.href} target="_blank" rel="noreferrer" key={partner.name}>
+                <span>{partner.type}</span><h3>{partner.name}</h3><Icon name="arrow-up-right" />
+              </a>
+            ))}
+          </div>
         </section>
 
         <section className="ecosystem-section section-pad">
@@ -337,7 +340,7 @@ function HomePage() {
 
         <section className="portfolio-section section-pad">
           <SectionHeading eyebrow="06 / Portfolio" title="Projects Portfolio" intro="Active portfolio of high-potential startups undergoing rapid acceleration to transform innovative technology into scalable, market-ready commercial assets." action={{ href: "/partners#portfolio", label: "Discover More" }} />
-          <div className="portfolio-grid">{portfolio.map((company, i) => <PortfolioCard company={company} index={i} wide={i === 0 || i === 5} key={company.name} />)}</div>
+          <div className="portfolio-grid">{homepagePortfolio.map((company, i) => <PortfolioCard company={company} index={i} wide={i === 0} key={company.name} />)}</div>
         </section>
 
         <section className="testimonials-section section-pad">
@@ -369,7 +372,7 @@ function TeamPage() {
   return (
     <main className="internal-page">
       <InternalHero eyebrow="Our Team" title="Acceleration & Investment Committee" intro="Investors and world class technology experts guiding portfolio companies from validation to scale." tone="lavender" meta={["200+ Startups in Our Network", "60+ Partner Companies", "50+ World Class Experts", "$95M+ Partner Capital Committed"]} />
-      <section className="team-directory section-pad"><SectionHeading eyebrow="Committee Members" title="Seasoned investors and world class technology experts" intro="Across European and international markets" />
+      <section className="team-directory section-pad"><SectionHeading eyebrow="Our Team" title="Committee Members" intro="Seasoned investors and world class technology experts across European and international markets" />
         <div className="team-grid">{team.map((person, i) => <article className={`team-card team-tone-${(i % 4) + 1}`} key={person.name}>
           <div className="team-card-shell">
             <a className="team-image" href={person.linkedin} target="_blank" rel="noreferrer" aria-label={`View ${person.name} on LinkedIn`}>
@@ -402,9 +405,9 @@ function PartnersPage() {
     <main className="internal-page">
       <InternalHero eyebrow="Partner Ecosystem" title="Built on partnerships, driven by impact" intro="Our portfolio startups gain direct access to $95M+ in partner capital, 890+ technology grants, and a network spanning 4 countries." tone="mint" meta={["12+ Consortium Partners", "890+ Technology Grants", "$95M+ Capital Committed", "4 Countries"]} />
       <section className="section-pad"><SectionHeading eyebrow="Technology Partners" title="Startups in our portfolio get access to grants from these companies" />
-        <div className="logo-grid large">{technologyPartners.map((partner) => <div key={partner.name}><img src={partner.logo} alt={partner.name} loading="lazy" decoding="async" /><span>{partner.name}</span></div>)}</div>
+        <div className="logo-grid large">{technologyPartners.map((partner) => <TechnologyPartnerCell partner={partner} key={partner.name} />)}</div>
       </section>
-      <section className="section-pad consortium-section"><SectionHeading eyebrow="Consortium Partners" title="Venture funds, accelerators, and family offices" intro="Co-investing and scaling European startups." />
+      <section className="section-pad consortium-section"><SectionHeading eyebrow="Partner ecosystem" title="Consortium Partners" intro="Venture funds, accelerators, and family offices co-investing and scaling European startups." />
         <div className="filter-row" role="group" aria-label="Filter partner categories">{types.map((type) => <button className={filter === type ? "active" : ""} aria-pressed={filter === type} onClick={() => setFilter(type)} key={type}>{type}</button>)}</div>
         <div className="consortium-grid">{filtered.map((partner, i) => <a href={partner.href} className="consortium-card" key={partner.name} target={partner.href === "#" ? undefined : "_blank"} rel="noreferrer"><div className="consortium-head"><span>{partner.type}</span><Icon name="arrow-up-right" /></div><h3>{partner.name}</h3><p>{partner.body}</p><div className="consortium-meta"><strong>{partner.value}</strong><span>{partner.place} · {partner.focus}</span></div></a>)}</div>
       </section>
@@ -450,8 +453,8 @@ function NewsroomPage() {
   return (
     <main className="internal-page">
       <InternalHero eyebrow="Portfolio newsroom" title="Funding updates from the startups we back" intro="A quieter record of the product work now moving forward across the Odra Venture portfolio, with matching links to each startup's own announcement." tone="peach" />
-      <section className="section-pad featured-news"><article><div className="news-art"><img src="/assets/odra-editorial-yellow.webp" alt="Abstract pastel yellow editorial artwork" loading="lazy" decoding="async" /><span>$450,000</span><small>seed round</small></div><div><div className="news-meta"><span>Portfolio Funding</span><span>{featured.date}</span><span>{featured.read}</span></div><h2>{featured.title}</h2><p>{featured.body}</p><div className="tag-list"><span>{featured.company}</span><span>{featured.category}</span><span>{featured.focus}</span></div><ArrowLink href={featured.href}>Read featured update</ArrowLink></div></article></section>
-      <section className="news-list-section section-pad"><SectionHeading eyebrow="Portfolio funding notes" title="Startup-by-startup updates" intro="On what the current round supports across product, infrastructure, and go-to-market execution." />
+      <section className="section-pad featured-news"><p className="featured-news-support">Each note links to the startup's own newsroom announcement so portfolio and company narratives stay aligned.</p><article><div className="news-art"><img src="/assets/odra-editorial-yellow.webp" alt="Abstract pastel yellow editorial artwork" loading="lazy" decoding="async" /><span>$450,000</span><small>seed round</small></div><div><div className="news-meta"><span>Portfolio Funding</span><span>{featured.date}</span><span>{featured.read}</span></div><h2>{featured.title}</h2><p>{featured.body}</p><div className="tag-list"><span>{featured.company}</span><span>{featured.category}</span><span>{featured.focus}</span></div><ArrowLink href={featured.href}>Read featured update</ArrowLink></div></article></section>
+      <section className="news-list-section section-pad"><SectionHeading eyebrow="Newsroom" title="Portfolio funding notes" intro="Startup-by-startup updates on what the current round supports across product, infrastructure, and go-to-market execution." />
         <div className="news-grid">{news.slice(1).map((item, i) => <article className="news-card" key={item.company}><img className="news-card-image" src={editorialImages[i % editorialImages.length]} alt="" aria-hidden="true" loading="lazy" decoding="async" /><div className="news-card-meta"><span>{item.category}</span><span>{item.read}</span></div><h3>{item.company}</h3><p>{item.body}</p><dl><dt>Backing</dt><dd>Red Queen Fund and Odra Venture</dd><dt>Focus</dt><dd>{item.focus}</dd></dl><ArrowLink href={item.href}>Read update</ArrowLink></article>)}</div>
       </section>
     </main>
@@ -463,7 +466,7 @@ function EventsPage() {
     <main className="internal-page">
       <InternalHero eyebrow="Events" title="Events" intro="We're building a calendar of events that bring together the people shaping European technology." tone="yellow" />
       <section className="section-pad events-grid">{events.map((event, i) => <article key={event.title} className={i === 0 ? "featured" : ""}><span>{event.number}</span><div><h2>{event.title}</h2><p>{event.body}</p><div className="event-meta"><span>{event.meta}</span><span>{event.audience}</span></div></div><Icon name="arrow-up-right" /></article>)}</section>
-      <section className="date-panel section-pad"><div><p className="eyebrow">Schedule</p><h2>Dates and details coming soon</h2><p>We'll announce event dates, locations, and registration through our newsletter.</p></div><Newsletter /></section>
+      <section className="date-panel section-pad"><div><p className="eyebrow">Schedule</p><h2>Dates and details coming soon</h2><p>We'll announce event dates, locations, and registration through our newsletter.</p></div><div className="date-panel-signup"><Newsletter /><small>No spam. Unsubscribe anytime.</small></div></section>
       <CallToAction title="Interested in speaking or sponsoring?" body="We're open to partnerships with organisations that share our commitment to early-stage technology companies in Europe." action="Get in touch" href="mailto:events@odraventure.com" />
     </main>
   );
@@ -490,7 +493,7 @@ function ApplyPage() {
   function submit(e) { e.preventDefault(); setMessage("Your founder profile is ready to continue."); }
   return (
     <main className="internal-page apply-page">
-      <InternalHero eyebrow="Application" title="Start Your Application" intro="We're looking for exceptional founders building in technology, energy, e-commerce, and premium markets." tone="peach" meta={["Review within max. 2 weeks", "Feedback on all applications", "Introduction call if there's a fit", "Transparent process throughout"]} />
+      <InternalHero eyebrow="Application" title="Start Your Application" intro="We're looking for exceptional founders building in technology, energy, e-commerce, and premium markets." tone="peach" meta={["€25K–€250K typical investment", "Review within max. 2 weeks", "Feedback on all applications", "Introduction call if there's a fit", "Transparent process throughout"]} />
       <section className="application-shell section-pad"><div className="application-steps">{["Founder", "Company", "Pitch", "Ask"].map((item, i) => <div className={i === 0 ? "active" : ""} key={item}><span>{i + 1}</span><strong>{item}</strong></div>)}</div>
         <form className="application-form" onSubmit={submit}><div className="form-heading"><p className="eyebrow">Step 01</p><h2>Founder Profile</h2><p>Tell us about you.</p></div><div className="field-grid"><label>First Name*<input required placeholder="Jane" /></label><label>Last Name*<input required placeholder="Smith" /></label><label>Email*<input required type="email" placeholder="jane@company.com" /></label><label>LinkedIn Profile*<input required type="url" placeholder="https://linkedin.com/in/yourprofile" /></label><label>Role / Title at Company*<input required placeholder="CEO & Co-Founder" /></label><label>Phone<input type="tel" placeholder="+1 555 000 0000" /></label></div><div className="cofounders"><div><h3>Co-Founders</h3><button type="button" onClick={() => setCofounders([...cofounders, cofounders.length + 1])}>Add Co-Founder</button></div>{cofounders.length === 0 ? <p>No co-founders added yet.</p> : cofounders.map((n) => <div className="cofounder-row" key={n}><label>Co-Founder Name<input required placeholder="Full name" /></label><label>Co-Founder Email<input required type="email" placeholder="email@company.com" /></label></div>)}</div><div className="form-submit"><p>By submitting, you agree to our Privacy Policy and Terms of Service.</p><button className="button button-primary" type="submit">Continue <Icon name="arrow-right" /></button></div>{message && <p className="success-message" role="status">{message}</p>}</form>
       </section>
@@ -502,7 +505,7 @@ function ContactPage() {
   const [sent, setSent] = useState(false);
   return (
     <main className="internal-page"><InternalHero eyebrow="Contact" title="Get in touch" intro="Whether you're a founder, investor, or potential partner, we'd love to hear from you." tone="mint" />
-      <section className="contact-layout section-pad"><form onSubmit={(e) => { e.preventDefault(); setSent(true); e.currentTarget.reset(); }}><h2>Send a message</h2><label>Name<input required placeholder="Your name" /></label><label>Email<input required type="email" placeholder="you@company.com" /></label><label>Subject<input required placeholder="What's this about?" /></label><label>Message<textarea required placeholder="Tell us more..." rows="6" /></label><button className="button button-primary" type="submit">Send Message <Icon name="arrow-right" /></button>{sent && <p className="success-message">Your message is ready for the Odra team.</p>}</form><aside><div><p className="eyebrow">Contact</p><a href="mailto:hello@odraventure.com">Email<strong>hello@odraventure.com</strong></a><a href="tel:+48571211808">Phone<strong>+48 571 211 808</strong></a><span>Office<strong>Warszawa & Wrocław, Poland</strong></span><span>Response time<strong>Within 48 hours</strong></span></div><div><h3>Book a meeting</h3><ArrowLink href="https://calendly.com">Schedule a Call</ArrowLink></div><div><h3>Legal entity</h3><p>ODRA VENTURE SP. Z O.O.</p><p>KRS: 0001225642 · NIP: 1133194972 · REGON: 544050560</p></div></aside></section>
+      <section className="contact-layout section-pad"><form onSubmit={(e) => { e.preventDefault(); setSent(true); e.currentTarget.reset(); }}><h2>Send a message</h2><label>Name<input required placeholder="Your name" /></label><label>Email<input required type="email" placeholder="you@company.com" /></label><label>Subject<input required placeholder="What's this about?" /></label><label>Message<textarea required placeholder="Tell us more..." rows="6" /></label><button className="button button-primary" type="submit">Send Message <Icon name="arrow-right" /></button>{sent && <p className="success-message">Your message is ready for the Odra team.</p>}</form><aside><div><p className="eyebrow">Contact</p><a href="mailto:hello@odraventure.com">Email<strong>hello@odraventure.com</strong></a><a href="tel:+48571211808">Phone<strong>+48 571 211 808</strong></a><span>Office<strong>Warszawa & Wrocław, Poland</strong></span><span>Response time<strong>Within 48 hours</strong></span></div><div><h3>Book a meeting</h3><ArrowLink href="https://calendly.com">Schedule a Call</ArrowLink></div><div><h3>Follow</h3><div className="contact-socials"><a href="https://linkedin.com/company/odra-venture" target="_blank" rel="noreferrer">LinkedIn</a><a href="https://twitter.com/OdraVenture" target="_blank" rel="noreferrer">Twitter</a></div></div><div><h3>Legal entity</h3><p>ODRA VENTURE SP. Z O.O.</p><p>KRS: 0001225642 · NIP: 1133194972 · REGON: 544050560</p></div></aside></section>
     </main>
   );
 }
@@ -531,7 +534,14 @@ function CopyBlock({ length, text }) {
 }
 
 function LegalPage() {
-  return <main className="internal-page"><InternalHero eyebrow="Legal" title="Legal information" intro="Privacy Policy, Terms of Service, and Disclaimer." tone="blue" /><section className="editorial-split section-pad"><div><h2>Odra Venture Sp. z o.o.</h2><p>KRS: 0001225642 · NIP: 1133194972 · REGON: 544050560</p></div><div className="long-copy"><h3>Disclaimer</h3><p>Odra Venture does not operate as a registered investment fund.</p><p>Acceleration and technology grant decisions are made on a case-by-case basis.</p><h3>Founder data</h3><p>All application data is treated as strictly confidential. We comply with GDPR and Polish data protection regulations. Your pitch materials are never shared outside our investment committee without explicit consent.</p></div></section></main>;
+  return <main className="internal-page legal-page"><InternalHero eyebrow="Legal" title="Legal information" intro="Privacy Policy, Terms of Service, Investment Disclaimer, and Cookie Policy." tone="blue" />
+    <section className="editorial-split section-pad" id="company-details"><div><p className="eyebrow">Company details</p><h2>Odra Venture Sp. z o.o.</h2></div><div className="long-copy legal-details"><dl><dt>Registered Name</dt><dd>ODRA VENTURE SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ</dd><dt>Short Name</dt><dd>Odra Venture Sp. z o.o.</dd><dt>KRS</dt><dd>0001225642</dd><dt>NIP</dt><dd>1133194972</dd><dt>REGON</dt><dd>544050560</dd><dt>Registered Office</dt><dd>Wrocław, Poland</dd></dl></div></section>
+    <section className="editorial-split section-pad legal-section" id="privacy"><div><p className="eyebrow">Privacy</p><h2>Privacy Policy</h2></div><div className="long-copy"><p>Odra Venture Sp. z o.o. is committed to protecting your privacy in accordance with the General Data Protection Regulation (GDPR) and Polish data protection law. This policy explains how we collect, use, and protect your personal information.</p><p>We collect information you provide directly to us, such as when you apply to our accelerator programme, contact us, or subscribe to our communications.</p><p>We use this information to evaluate applications, communicate with you, and improve our services. We do not sell your personal information to third parties.</p><p>You have the right to access, rectify, or delete your personal data at any time. To exercise these rights, contact us at <a href="mailto:legal@odraventure.com">legal@odraventure.com</a>.</p></div></section>
+    <section className="editorial-split section-pad legal-section" id="terms"><div><p className="eyebrow">Website use</p><h2>Terms of Service</h2></div><div className="long-copy"><p>By using our website and services, you agree to these terms. Odra Venture Sp. z o.o. provides this website and its contents on an “as is” basis.</p><p>We reserve the right to modify or discontinue any aspect of our services at any time without notice.</p></div></section>
+    <section className="editorial-split section-pad legal-section" id="disclaimer"><div><p className="eyebrow">Investment</p><h2>Investment Disclaimer</h2></div><div className="long-copy"><p><strong>Odra Venture Sp. z o.o. does not operate as a registered investment fund.</strong></p><p>Acceleration and investment decisions are made on a case-by-case basis by individual partners and participating investors. Nothing on this website constitutes investment advice or an offer to invest.</p><p>Past performance of portfolio companies does not guarantee future results. Startup investments are inherently risky and may result in partial or total loss of capital.</p></div></section>
+    <section className="editorial-split section-pad legal-section" id="cookies"><div><p className="eyebrow">Cookies</p><h2>Cookie Policy</h2></div><div className="long-copy"><p>This website uses cookies to enhance your browsing experience. By continuing to use our site, you consent to our use of cookies in accordance with this policy.</p><p>We use essential cookies for site functionality and optional analytics cookies to understand how visitors interact with our site. You can manage your preferences through your browser settings.</p></div></section>
+    <section className="editorial-split section-pad legal-section" id="legal-contact"><div><p className="eyebrow">Contact</p><h2>Legal & data protection</h2></div><div className="long-copy legal-contact-list"><a href="mailto:legal@odraventure.com">legal@odraventure.com</a><a href="mailto:hello@odraventure.com">hello@odraventure.com</a><a href="tel:+48571211808">+48 571 211 808</a><p>Last updated: February 2026.</p></div></section>
+  </main>;
 }
 
 function CallToAction({ title, body, action, href }) {

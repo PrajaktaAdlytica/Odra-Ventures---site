@@ -33,6 +33,14 @@ html {
   scroll-padding-top: 96px;
 }
 
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
 body {
   margin: 0;
   min-width: 320px;
@@ -44,6 +52,12 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+.home-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 body::selection {
@@ -1563,6 +1577,81 @@ h3 {
   transform: translateY(0);
 }
 
+.logo-grid > div.text-only > span {
+  position: static;
+  color: var(--ink);
+  font-size: clamp(0.78rem, 1vw, 0.94rem);
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  opacity: 1;
+  transform: none;
+}
+
+.logo-grid > div.text-only::before {
+  width: 24px;
+  height: 2px;
+  margin-bottom: 15px;
+  background: var(--orange);
+  content: "";
+  transition: width 350ms var(--ease);
+}
+
+.logo-grid > div.text-only:hover::before {
+  width: 46px;
+}
+
+.home-consortium {
+  border-top: 1px solid var(--line);
+}
+
+.home-consortium-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.home-consortium-grid > a {
+  position: relative;
+  min-height: 210px;
+  padding: 30px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.36);
+  transition: color 280ms ease, background 280ms ease, transform 420ms var(--ease);
+}
+
+.home-consortium-grid > a > span {
+  color: var(--orange);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.home-consortium-grid > a h3 {
+  max-width: 220px;
+  margin-top: 58px;
+}
+
+.home-consortium-grid > a .icon {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  transition: transform 350ms var(--ease);
+}
+
+.home-consortium-grid > a:hover {
+  color: #fff;
+  background: var(--ink);
+  transform: translateY(-5px);
+}
+
+.home-consortium-grid > a:hover .icon {
+  filter: brightness(0) invert(1);
+  transform: translate(4px, -4px);
+}
+
 .partner-rail > .arrow-link {
   margin-top: 34px;
 }
@@ -2261,6 +2350,58 @@ h3 {
   color: rgba(255, 255, 255, 0.42);
   font-size: 0.64rem;
   line-height: 1.6;
+}
+
+.contact-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.contact-socials a {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 10px 15px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--orange);
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.legal-section {
+  border-top: 1px solid var(--line);
+}
+
+.legal-page .long-copy a {
+  color: var(--orange);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.legal-details dl {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.45fr) 1fr;
+  gap: 14px 28px;
+}
+
+.legal-details dt {
+  color: var(--ink-2);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.legal-details dd {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.legal-contact-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .cookie-notice {
@@ -3167,6 +3308,14 @@ h3 {
   align-items: center;
 }
 
+.featured-news-support {
+  max-width: 760px;
+  margin: 0 0 clamp(28px, 4vw, 52px);
+  color: var(--ink-2);
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  line-height: 1.65;
+}
+
 .news-art {
   position: relative;
   display: flex;
@@ -3447,6 +3596,17 @@ h3 {
   max-width: 600px;
   margin-top: 20px;
   color: var(--ink-2);
+}
+
+.date-panel-signup {
+  align-self: end;
+}
+
+.date-panel-signup > small {
+  display: block;
+  margin-top: 12px;
+  color: var(--ink-2);
+  font-size: 0.72rem;
 }
 
 /* FAQ */
@@ -4681,6 +4841,19 @@ h3 {
     padding: 18px;
   }
 
+  .home-consortium-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .home-consortium-grid > a {
+    min-height: 180px;
+    padding: 22px;
+  }
+
+  .home-consortium-grid > a h3 {
+    margin-top: 48px;
+  }
+
   .ecosystem-map {
     min-height: 540px;
     padding: 20px;
@@ -4738,6 +4911,26 @@ h3 {
 
   .footer-brand {
     grid-column: span 2;
+  }
+
+  .arrow-link,
+  .footer-grid > div:not(.footer-brand) > a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .footer-grid > div:not(.footer-brand) {
+    gap: 4px;
+  }
+
+  .legal-details dl {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .legal-details dd {
+    margin-bottom: 14px;
   }
 
   .cookie-notice {
